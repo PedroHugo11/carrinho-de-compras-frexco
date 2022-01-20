@@ -13,14 +13,23 @@ import {
   Box,
 } from "@material-ui/core";
 
+interface CartItemsAmount {
+  [key: number]: number;
+}
+
 const Home = (): JSX.Element => {
 
   const [products, setProducts] = useState<Product[]>([]);
-  const { addProduct } = useCart();
+  const { addProduct, cart } = useCart();
+
+  const cartItemsAmount = cart.reduce((sumAmount, product) => {
+    sumAmount[product.id] = product.amount
+
+    return sumAmount
+  }, {} as CartItemsAmount)
 
   useEffect(() => {
     api.get('/fruit/all').then(({data}) => {
-      console.log("teste" + data);
       setProducts(data);
     });
   }, []);
@@ -46,7 +55,7 @@ const Home = (): JSX.Element => {
               >
                 <div>
                   <MdAddShoppingCart size={16} color="#FFF" />
-                  {/* {cartItemsAmount[product.id] || 0} */} 2
+                  {cartItemsAmount[product.id] || 0}
                 </div>
                 <span>ADICIONAR AO CARRINHO</span>
               </button>

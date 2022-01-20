@@ -4,7 +4,7 @@ export interface Product {
     id: number;
     family: string;
     order: string;
-    nutritions: ProductNutritions[];
+    nutritions: ProductNutritions;
     amount: number;
   }
   
@@ -14,4 +14,9 @@ interface ProductNutritions {
     fat: number;
     calories: number;
     sugar: number;
+}
+
+export interface Stock {
+  id: number;
+  amount: number;
 }

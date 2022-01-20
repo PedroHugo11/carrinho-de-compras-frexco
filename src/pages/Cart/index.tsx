@@ -12,7 +12,28 @@ import {
 
 import { Container, ProductTable, Total } from './styles';
 
+import { useCart } from '../../hook/useCart';
+import { Product } from '../../types';
+
 const Cart = (): JSX.Element => {
+
+  const { cart, removeProduct, updateProductAmount  } = useCart();
+
+  function handleProductIncrement(product: Product) {
+    updateProductAmount({productId: product.id, amount: product.amount + 1})
+  }
+
+  function handleProductDecrement(product: Product) {
+    updateProductAmount({productId: product.id, amount: product.amount - 1})
+  }
+
+  function handleRemoveProduct(productId: number) {
+    removeProduct(productId)
+  }
+  
+  /*cart.map(product => {
+    console.log(product);
+  });*/
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -29,44 +50,46 @@ const Cart = (): JSX.Element => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>
-                      <strong>Apple</strong>
-                    </td>
-                    <td>
-                      <div>
+                  {cart.map(product => (
+                    <tr key={product.id}>
+                      <td>
+                        <strong>{product.name}</strong>
+                      </td>
+                      <td>
+                        <div>
+                          <button
+                            type="button"
+                            disabled={product.amount <= 1}
+                            onClick={() => handleProductDecrement(product)}
+                          >
+                            <MdRemoveCircleOutline size={20} />
+                          </button>
+                          <input
+                            type="text"
+                            readOnly
+                            value={product.amount}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleProductIncrement(product)}
+                          >
+                            <MdAddCircleOutline size={20} />
+                          </button>
+                        </div>
+                      </td>
+                      <td>
+                        <strong>{product.nutritions.calories}</strong>
+                      </td>
+                      <td>
                         <button
                           type="button"
+                          onClick={() => handleRemoveProduct(product.id)}
                         >
-                          <MdRemoveCircleOutline size={20} />
+                          <MdDelete size={20} />
                         </button>
-                        <input
-                          type="text"
-                          readOnly
-                          value={2}
-                        />
-                        <button
-                          type="button"
-                          data-testid="increment-product"
-                        >
-                          <MdAddCircleOutline size={20} />
-                        </button>
-                      </div>
-                    </td>
-                    <td>
-                      <strong>104</strong>
-                    </td>
-                    <td>
-                      <button
-                        type="button"
-                        data-testid="remove-product"
-                      // onClick={() => handleRemoveProduct(product.id)}
-                      >
-                        <MdDelete size={20} />
-                      </button>
-                    </td>
-                  </tr>
-                  
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </ProductTable>
 
