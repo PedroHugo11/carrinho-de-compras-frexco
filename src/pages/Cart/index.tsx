@@ -19,6 +19,15 @@ const Cart = (): JSX.Element => {
 
   const { cart, removeProduct, updateProductAmount  } = useCart();
 
+  const cartWithSubtotal = cart.map(product => ({
+    ...product,
+    subTotal: product.nutritions.calories * product.amount
+  }));
+
+  const total = cart.reduce((sumTotal, product) => {
+      return sumTotal += product.nutritions.calories * product.amount;
+    }, 0);
+
   function handleProductIncrement(product: Product) {
     updateProductAmount({productId: product.id, amount: product.amount + 1})
   }
@@ -30,10 +39,6 @@ const Cart = (): JSX.Element => {
   function handleRemoveProduct(productId: number) {
     removeProduct(productId)
   }
-  
-  /*cart.map(product => {
-    console.log(product);
-  });*/
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -50,7 +55,7 @@ const Cart = (): JSX.Element => {
                   </tr>
                 </thead>
                 <tbody>
-                  {cart.map(product => (
+                  {cartWithSubtotal.map(product => (
                     <tr key={product.id}>
                       <td>
                         <strong>{product.name}</strong>
@@ -78,7 +83,7 @@ const Cart = (): JSX.Element => {
                         </div>
                       </td>
                       <td>
-                        <strong>{product.nutritions.calories}</strong>
+                        <strong>{product.subTotal}</strong>
                       </td>
                       <td>
                         <button
@@ -98,7 +103,7 @@ const Cart = (): JSX.Element => {
 
                 <Total>
                   <span>TOTAL CALÓRICO:</span>
-                  <strong>104</strong>
+                  <strong>{total}</strong>
                 </Total>
               </footer>
             </Container>  

@@ -21,8 +21,18 @@ export const ProductList = styled.ul`
     }
 
     > div {
-      svg {
+
+      button {
         margin-top:3px;
+        background:transparent;
+      }
+
+      button:hover {
+        background:transparent;
+      }
+
+      svg {
+        margin-top:0px;
       }
     }
 

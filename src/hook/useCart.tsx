@@ -3,6 +3,10 @@ import { createContext, ReactNode, useContext, useState } from "react";
 import api from '../services/api';
 import { Product } from '../types';
 
+interface CartProviderProps {
+  children: ReactNode;
+}
+
 interface UpdateProductAmount {
   productId: number;
   amount: number;
@@ -13,10 +17,6 @@ interface CartContextData {
     addProduct: (product: Product) => Promise<void>;
     removeProduct: (productId: number) => void;
     updateProductAmount: ({ productId, amount }: UpdateProductAmount) => void;
-}
-
-interface CartProviderProps {
-    children: ReactNode;
 }
 
 const CartContext = createContext<CartContextData>({} as CartContextData);
@@ -37,17 +37,15 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       try {
         
         const productAlreadyExists = cart.find(
-          itemProduct => itemProduct === product
+          itemProduct => itemProduct.id === product.id
         );
-
-        console.log(productAlreadyExists);
   
         if (productAlreadyExists) {
 
           const { amount: productAmount } = productAlreadyExists;
   
           const updatedAmountCartProduct = cart.map(itemProduct => {
-            return itemProduct === product 
+            return itemProduct.id === product.id
               ? {...product, amount: productAmount + 1 } 
               : product;
           });
@@ -55,7 +53,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
           setCart(updatedAmountCartProduct);
     
           localStorage.setItem(
-            '@Frexco',
+            '@frexco',
             JSON.stringify(updatedAmountCartProduct)
           );
   
@@ -88,7 +86,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
   
         setCart(filteredCart);
   
-        localStorage.setItem('@Frexco', JSON.stringify(filteredCart));
+        localStorage.setItem('@frexco', JSON.stringify(filteredCart));
       } catch {
         console.log('Erro na remoção do produto');
       }
@@ -101,12 +99,6 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       try {
         if (amount < 1) return;
   
-        const productAlreadyExists = cart.find(
-          product => product.id === productId
-        );
-  
-        if (!productAlreadyExists) throw Error();
-  
         const updatedAmountCartProduct = cart.map(product => {
           return product.id === productId ? { ...product, amount } : product;
         });
@@ -114,7 +106,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
         setCart(updatedAmountCartProduct);
   
         localStorage.setItem(
-          '@Frexco',
+          '@frexco',
           JSON.stringify(updatedAmountCartProduct)
         );
       } catch {
