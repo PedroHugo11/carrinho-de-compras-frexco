@@ -10,6 +10,8 @@ import {
   Box,
 } from "@material-ui/core";
 
+import { Link } from 'react-router-dom';
+
 import { Container, ProductTable, Total } from './styles';
 
 import { useCart } from '../../hook/useCart';
@@ -99,7 +101,10 @@ const Cart = (): JSX.Element => {
               </ProductTable>
 
               <footer>
-                <button type="button">Finalizar pedido</button>
+                <Link to="/order">
+                  <button type="button">Finalizar pedido</button>
+                </Link>
+                
 
                 <Total>
                   <span>TOTAL CALÓRICO:</span>
